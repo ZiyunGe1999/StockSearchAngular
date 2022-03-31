@@ -1,0 +1,14 @@
+body {
+    min-height: 75rem;
+    padding-top: 4.5rem;
+  }
+
+#search-header {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    background-color: #2323AC;
+}
+
+#header-menu {
+    text-align: right;
+}
