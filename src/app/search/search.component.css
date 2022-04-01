@@ -1,0 +1,45 @@
+#stock_search_text {
+    display: block;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bolder;
+    margin-top: 2rem;
+}
+
+#search_bar {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+#search_center {
+    display: inline-block;
+    width: 50%;
+    min-width: 20rem;
+    border-radius: 20px;
+    border: 2px solid #2323AC;
+    padding: 4px;
+}
+
+#typeahead-basic-div {
+    display: inline-block;
+    width: 80%;
+}
+
+#typeahead-basic {
+    border: 0px;
+}
+
+#typeahead-basic:focus{
+    box-shadow: none;
+}
+
+.search_response {
+    display: inline-block;
+    width: 10%;
+    max-width: 2rem;
+}
+
+.search_inside {
+    height: 1rem;
+    /* color: #2323AC; */
+}
