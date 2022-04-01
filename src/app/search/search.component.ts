@@ -4,6 +4,8 @@ import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 // import { FormsModule } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 
+import {InfoRequestService} from '../info-request.service';
+
 const states = ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado',
   'Connecticut', 'Delaware', 'District Of Columbia', 'Federated States Of Micronesia', 'Florida', 'Georgia',
   'Guam', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine',
@@ -20,7 +22,10 @@ const states = ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'C
 })
 export class SearchComponent implements OnInit {
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private infoService : InfoRequestService
+    ) { }
 
   ngOnInit(): void {
   }
@@ -29,6 +34,7 @@ export class SearchComponent implements OnInit {
   init_color = "#2323AC";
   search_color = this.init_color;
   times_color = this.init_color;
+  input_size = 0;
 
   searchForm = this.formBuilder.group({
     symbol: ''
@@ -39,8 +45,20 @@ export class SearchComponent implements OnInit {
       debounceTime(200),
       distinctUntilChanged(),
       map(term => term.length < 2 ? []
-        : states.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
+        : this.infoService.symbol_list.filter(v => v.toUpperCase().indexOf(term.toUpperCase()) > -1).slice(0, 10))
     )
+
+  updateAutoComplete() {
+    // console.log('updateAutoComplete');
+    this.input_size = this.searchForm.value['symbol'].length;
+    var pre_input_size = this.input_size;
+    setTimeout(()=>{                           // <<<---using ()=> syntax
+      if (pre_input_size == this.input_size) {
+        this.infoService.getAutoCompleteInfo(this.searchForm.value['symbol']);
+      }
+    }, 500);
+    // this.infoService.getAutoCompleteInfo(this.searchForm.value['symbol']);
+  }
 
   cleanForm() {
     this.searchForm.reset();

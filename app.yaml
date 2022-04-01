@@ -1,0 +1,15 @@
+runtime: nodejs16
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /
+  static_files: dist/stock-search/index.html
+  upload: dist/stock-search/index.html
+
+- url: /search
+  static_files: dist/stock-search/index.html
+  upload: dist/stock-search/index.html
+
+- url: /
+  static_dir: dist/stock-search

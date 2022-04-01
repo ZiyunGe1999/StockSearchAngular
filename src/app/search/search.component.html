@@ -6,7 +6,7 @@
     <div id="search_center">
         <div id="typeahead-basic-div">
         <form [formGroup]="searchForm" (ngSubmit)="onSubmit()">
-            <input id="typeahead-basic" type="text" class="form-control" formControlName="symbol" [(ngModel)]="model" [ngbTypeahead]="search" placeholder="Enter Stock Ticker Symbol"/>
+            <input (keyup)="updateAutoComplete()" id="typeahead-basic" type="text" class="form-control" formControlName="symbol" [(ngModel)]="model" [ngbTypeahead]="search" placeholder="Enter Stock Ticker Symbol"/>
         </form>
         </div>
         <div class="search_response">
