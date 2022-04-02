@@ -18,7 +18,7 @@ export class InfoshowComponent implements OnInit {
   getOpenCloseColor() {
     var cur_time = Date.now().valueOf() / 1000;
     console.log('current time: ' + cur_time);
-    if (cur_time - this.infoService.company_latest_price.t > 20) {
+    if (cur_time - this.infoService.company_latest_price.t > 5 * 60) {
       return 'red';
     }
     else {
@@ -29,7 +29,7 @@ export class InfoshowComponent implements OnInit {
   getOpenCloseText() {
     var cur_time = Date.now().valueOf() / 1000;
     console.log('current time: ' + cur_time);
-    if (cur_time - this.infoService.company_latest_price.t > 20) {
+    if (cur_time - this.infoService.company_latest_price.t > 5 * 60) {
       var t = new Date(this.infoService.company_latest_price.t * 1000);
       var month = t.getMonth() + 1;
       return 'Market Closed on ' + t.getFullYear() + '-' + month + '-' + t.getDate() + '  ' + t.getUTCHours() + ':' + t.getUTCMinutes() + ':' + t.getUTCSeconds();

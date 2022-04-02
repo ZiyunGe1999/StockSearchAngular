@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AutoCompleteInfo, CompanyDescription, CompanyLatestPrice } from './format';
+import { AutoCompleteInfo, CompanyDescription, CompanyLatestPrice, CompanyPeers } from './format';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -13,6 +13,7 @@ export class InfoRequestService {
 
   conpmay_description = {} as CompanyDescription;
   company_latest_price = {}  as CompanyLatestPrice;
+  company_peers : string[] = [];
 
   constructor(
     private http: HttpClient
@@ -77,6 +78,24 @@ export class InfoRequestService {
         t : data.t
       });
       console.log("getCompanyLatestPrice response");
+    }
+  }
+
+  getCompanyPeers(q : string) {
+    if (typeof(q) != "undefined") {
+      q = q.toUpperCase();
+      var url = 'https://finnhub.io/api/v1/stock/peers?symbol=' + q + '&token=' + this.api_key;
+      console.log(url);
+      this.http.get<string []>(url).subscribe({
+        next: data =>{
+          this.company_peers=data
+        }
+      });
+      console.log(this.company_peers);
+      for (let item of this.company_peers) {
+        console.log('peer: ' + item);
+      }
+      console.log("getCompanyPeers response");
     }
   }
 }

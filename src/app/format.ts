@@ -45,3 +45,7 @@ export interface CompanyLatestPrice {
     pc : number,
     t : number
 }
+
+export interface CompanyPeers {
+    peers: string[]
+}

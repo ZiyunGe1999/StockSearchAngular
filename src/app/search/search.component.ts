@@ -77,6 +77,7 @@ export class SearchComponent implements OnInit {
     // window.alert('symbol: ' + this.searchForm.value['symbol']);
     this.infoService.getCompnayDescription(this.searchForm.value['symbol']);
     this.infoService.getCompanyLatestPrice(this.searchForm.value['symbol']);
+    this.infoService.getCompanyPeers(this.searchForm.value['symbol']);
   }
 
 }

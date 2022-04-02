@@ -1,0 +1,25 @@
+<div class="row" id="summary">
+    <div class="col-md-6">
+      <div id="price_table">
+          <div><b>High Price: </b>{{ infoService.company_latest_price.h }}</div>
+          <div><b>Low Price: </b>{{ infoService.company_latest_price.l }}</div>
+          <div><b>Open Price: </b>{{ infoService.company_latest_price.o }}</div>
+          <div><b>Prev. Price: </b>{{ infoService.company_latest_price.pc }}</div>
+      </div>
+      <div id="about_the_company">
+          About the company
+      </div>
+      <div>
+        <div><b>IPO Start Date: </b>{{ infoService.conpmay_description.ipo }}</div>
+        <div><b>Industry: </b>{{ infoService.conpmay_description.finnhubIndustry }}</div>
+        <div><b>Webpage: </b><a [href]="infoService.conpmay_description.weburl" target="_blank">{{ infoService.conpmay_description.weburl }}</a></div>
+        <div>
+            <b>Company peers: </b>
+            <div style="display: inline-block;" *ngFor="let item of infoService.company_peers">
+                <span>{{ item }}</span> &nbsp;
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">.col-md-4</div>
+  </div>

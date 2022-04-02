@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -11,6 +12,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { InfoshowComponent } from './infoshow/infoshow.component';
 import { CompanydescriptionComponent } from './companydescription/companydescription.component';
 import { CompanylatestpriceComponent } from './companylatestprice/companylatestprice.component';
+import { SummaryComponent } from './summary/summary.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -18,7 +21,8 @@ import { CompanylatestpriceComponent } from './companylatestprice/companylatestp
     SearchComponent,
     InfoshowComponent,
     CompanydescriptionComponent,
-    CompanylatestpriceComponent
+    CompanylatestpriceComponent,
+    SummaryComponent
   ],
   imports: [
     BrowserModule,
@@ -26,7 +30,9 @@ import { CompanylatestpriceComponent } from './companylatestprice/companylatestp
     NgbModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatTabsModule,
+    BrowserAnimationsModule
   ],
   providers: [
     FormBuilder

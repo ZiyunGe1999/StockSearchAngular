@@ -43,3 +43,7 @@
     height: 1rem;
     /* color: #2323AC; */
 }
+
+.mat-tab-group {
+    margin-bottom: 48px;
+  }
