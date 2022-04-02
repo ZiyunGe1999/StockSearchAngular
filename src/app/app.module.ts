@@ -8,11 +8,17 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SearchComponent } from './search/search.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { InfoshowComponent } from './infoshow/infoshow.component';
+import { CompanydescriptionComponent } from './companydescription/companydescription.component';
+import { CompanylatestpriceComponent } from './companylatestprice/companylatestprice.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SearchComponent
+    SearchComponent,
+    InfoshowComponent,
+    CompanydescriptionComponent,
+    CompanylatestpriceComponent
   ],
   imports: [
     BrowserModule,

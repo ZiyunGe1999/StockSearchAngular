@@ -1,0 +1,15 @@
+#ticker {
+    font-size: 2rem;
+    /* font-weight: bold; */
+}
+
+#company_name {
+    font-size: 1.5rem;
+    /* font-weight: bold; */
+    color: grey;
+}
+
+#exchange {
+    font-size: 1rem;
+    font-weight: lighter;
+}

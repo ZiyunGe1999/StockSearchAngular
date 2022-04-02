@@ -1,0 +1,17 @@
+.logo {
+    text-align: center;
+}
+
+#infoshow {
+    margin-top: 2rem;
+}
+
+#latest_price {
+    text-align: right;
+}
+
+#open_close_status {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 1rem;
+}

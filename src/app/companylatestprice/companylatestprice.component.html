@@ -1,0 +1,9 @@
+<div [style.color]="getPriceColor()" id="price">{{ infoService.company_latest_price.c }}</div>
+<div [style.color]="getPriceColor()" id="change">
+    <div class="inlineblock"><img width="20px" [src]="getUpDownArrow()">{{ infoService.company_latest_price.d }}</div>
+    <div class="inlineblock">{{ '(' + infoService.company_latest_price.dp + '%)' }}</div>
+</div>
+<div id="time">
+    <div class="inlineblock">{{ convertUnixTimeToDate(infoService.company_latest_price.t) }}</div> &nbsp;
+    <div class="inlineblock">{{ convertUnixTimeToLocalTime(infoService.company_latest_price.t) }}</div>
+</div>

@@ -1,0 +1,8 @@
+<div class="row" id="infoshow">
+    <div class="col-4"><app-companydescription></app-companydescription></div>
+    <div class="col-4 logo"><img [src]="infoService.conpmay_description.logo" width="35%"></div>
+    <div class="col-4" id="latest_price"><app-companylatestprice></app-companylatestprice></div>
+  </div>
+  <div id="open_close_status" [style.color]="getOpenCloseColor()">
+    {{ getOpenCloseText() }}
+  </div>
