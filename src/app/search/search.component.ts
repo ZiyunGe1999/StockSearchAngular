@@ -24,7 +24,7 @@ export class SearchComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private infoService : InfoRequestService
+    private infoService : InfoRequestService,
     ) { }
 
   ngOnInit(): void {
@@ -75,9 +75,11 @@ export class SearchComponent implements OnInit {
 
   onSubmit(): void {
     // window.alert('symbol: ' + this.searchForm.value['symbol']);
+    this.infoService.ready = false;
     this.infoService.getCompnayDescription(this.searchForm.value['symbol']);
     this.infoService.getCompanyLatestPrice(this.searchForm.value['symbol']);
     this.infoService.getCompanyPeers(this.searchForm.value['symbol']);
+    this.infoService.ready = true;
   }
 
 }

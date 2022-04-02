@@ -21,5 +21,14 @@
         </div>
       </div>
     </div>
-    <div class="col-md-6">.col-md-4</div>
+    <div class="col-md-6">
+        <div *ngIf="infoService.ready">
+        <highcharts-chart 
+        [Highcharts]="infoService.Highcharts"
+        [options]="infoService.chartOptions"
+        [(update)]="infoService.updateFlag"
+        style="width: 100%; height: 400px; display: block;"
+        ></highcharts-chart>
+        </div>
+    </div>
   </div>

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AutoCompleteInfo, CompanyDescription, CompanyLatestPrice, CompanyPeers } from './format';
+import { AutoCompleteInfo, CompanyDescription, CompanyLatestPrice, CompanyHistoricalData } from './format';
 import { HttpClient } from '@angular/common/http';
+import * as Highcharts from 'highcharts';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +15,51 @@ export class InfoRequestService {
   conpmay_description = {} as CompanyDescription;
   company_latest_price = {}  as CompanyLatestPrice;
   company_peers : string[] = [];
+  ready = false;
 
   constructor(
     private http: HttpClient
   ) { }
+
+  getLineColor() {
+    if (this.company_latest_price.d > 0) {
+      return 'green';
+    }
+    else {
+      return 'red';
+    }
+  }
+
+  updateFlag = false;
+  sticker_changed = false;
+  line_color_changed = false;
+  price_chart_data = [[1631022300000, 2], [1631022360000, 3], [1631022420000, 4]];
+  Highcharts = Highcharts;
+  chartOptions: Highcharts.Options = {
+    title: {
+      text: this.conpmay_description.ticker + ' Hourly Price Variation'
+    },
+    xAxis: {
+        type: 'datetime',
+        dateTimeLabelFormats: { // don't display the dummy year
+            month: '%e. %b',
+            year: '%b'
+        },
+    },
+    series: [{
+      data: this.price_chart_data,
+      type: 'line',
+      color: this.getLineColor()
+    }]
+  };
+
+  changeUpdateFlag() {
+    if (this.sticker_changed && this.line_color_changed) {
+      this.updateFlag = true;
+      this.sticker_changed = false;
+      this.line_color_changed = false;
+    }
+  }
 
   getAutoCompleteInfo(q : string) {
     if (typeof(q) != "undefined" && q.length > 1) {
@@ -44,19 +86,13 @@ export class InfoRequestService {
       q = q.toUpperCase();
       var url = 'https://finnhub.io/api/v1/stock/profile2?symbol=' + q + '&token=' + this.api_key;
       console.log(url);
-      this.http.get<CompanyDescription>(url).subscribe((data : CompanyDescription) => this.conpmay_description = {
-        country :	data.country,
-        currency :	data.currency,
-        exchange :	data.exchange,
-        finnhubIndustry	: data.finnhubIndustry,
-        ipo :	data.ipo,
-        logo :	data.logo,
-        marketCapitalization :	data.marketCapitalization,
-        name :	data.name,
-        phone :	data.phone,
-        shareOutstanding :	data.shareOutstanding,
-        ticker :	data.ticker,
-        weburl :	data.weburl
+      this.http.get<CompanyDescription>(url).subscribe((data : CompanyDescription) => {
+        this.conpmay_description = data;
+        if (this.chartOptions.title) {
+          this.chartOptions.title.text = this.conpmay_description.ticker + ' Hourly Price Variation';
+          this.sticker_changed = true;
+          this.changeUpdateFlag();
+        }
       });
       console.log("getCompnayDescription response");
     }
@@ -67,15 +103,13 @@ export class InfoRequestService {
       q = q.toUpperCase();
       var url = 'https://finnhub.io/api/v1/quote?symbol=' + q + '&token=' + this.api_key;
       console.log(url);
-      this.http.get<CompanyLatestPrice>(url).subscribe((data : CompanyLatestPrice) => this.company_latest_price = {
-        c : data.c,
-        d : data.d,
-        dp : data.dp,
-        h : data.h,
-        l : data.l,
-        o : data.o,
-        pc : data.pc,
-        t : data.t
+      this.http.get<CompanyLatestPrice>(url).subscribe((data : CompanyLatestPrice) => {
+        this.company_latest_price = data;
+        if (this.chartOptions.series){
+          this.chartOptions.series[0].color = this.getLineColor();
+          this.line_color_changed = true;
+          this.changeUpdateFlag();
+        }
       });
       console.log("getCompanyLatestPrice response");
     }
@@ -98,4 +132,6 @@ export class InfoRequestService {
       console.log("getCompanyPeers response");
     }
   }
+
+  // getCompanyHistoricalData(q : string)
 }

@@ -18,7 +18,7 @@ export class CompanylatestpriceComponent implements OnInit {
   }
 
   convertUnixTimeToDate (time : number) {
-    console.log(time);
+    // console.log(time);
     var t = new Date(time * 1000);
     // var s = t.toLocaleDateString("en-US") + ' ' + t.toLocaleTimeString("en-US");
     // var s = t.toDateString();
