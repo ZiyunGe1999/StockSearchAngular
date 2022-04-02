@@ -14,6 +14,7 @@ export class InfoRequestService {
 
   conpmay_description = {} as CompanyDescription;
   company_latest_price = {}  as CompanyLatestPrice;
+  company_historical_data = {}  as CompanyHistoricalData;
   company_peers : string[] = [];
   ready = false;
 
@@ -33,11 +34,17 @@ export class InfoRequestService {
   updateFlag = false;
   sticker_changed = false;
   line_color_changed = false;
+  chart_data_changed = false;
   price_chart_data = [[1631022300000, 2], [1631022360000, 3], [1631022420000, 4]];
   Highcharts = Highcharts;
   chartOptions: Highcharts.Options = {
     title: {
       text: this.conpmay_description.ticker + ' Hourly Price Variation'
+    },
+    yAxis: {
+      title: {
+        text: 'USD'
+      }
     },
     xAxis: {
         type: 'datetime',
@@ -47,6 +54,7 @@ export class InfoRequestService {
         },
     },
     series: [{
+      name: this.conpmay_description.ticker,
       data: this.price_chart_data,
       type: 'line',
       color: this.getLineColor()
@@ -54,10 +62,11 @@ export class InfoRequestService {
   };
 
   changeUpdateFlag() {
-    if (this.sticker_changed && this.line_color_changed) {
+    if (this.sticker_changed && this.line_color_changed && this.chart_data_changed) {
       this.updateFlag = true;
       this.sticker_changed = false;
       this.line_color_changed = false;
+      this.chart_data_changed = false;
     }
   }
 
@@ -90,6 +99,9 @@ export class InfoRequestService {
         this.conpmay_description = data;
         if (this.chartOptions.title) {
           this.chartOptions.title.text = this.conpmay_description.ticker + ' Hourly Price Variation';
+          if (this.chartOptions.series) {
+            this.chartOptions.series[0].name = this.conpmay_description.ticker;
+          }
           this.sticker_changed = true;
           this.changeUpdateFlag();
         }
@@ -105,10 +117,19 @@ export class InfoRequestService {
       console.log(url);
       this.http.get<CompanyLatestPrice>(url).subscribe((data : CompanyLatestPrice) => {
         this.company_latest_price = data;
+        var cur_time = Math.round(Date.now().valueOf() / 1000);
+        var getTimestamp : number;
+        if (cur_time - this.company_latest_price.t > 5 * 60) {
+          getTimestamp = this.company_latest_price.t;
+        }
+        else {
+          getTimestamp = cur_time;
+        }
         if (this.chartOptions.series){
           this.chartOptions.series[0].color = this.getLineColor();
           this.line_color_changed = true;
           this.changeUpdateFlag();
+          this.getCompanyHistoricalData(q, getTimestamp);
         }
       });
       console.log("getCompanyLatestPrice response");
@@ -133,5 +154,33 @@ export class InfoRequestService {
     }
   }
 
-  // getCompanyHistoricalData(q : string)
+  getCompanyHistoricalData(q : string, end: number) {
+    if (typeof(q) != "undefined") {
+      q = q.toUpperCase();
+      var begin = end - (6 * 60 * 60);
+      var url = 'https://finnhub.io/api/v1/stock/candle?symbol=' + q + '&resolution=5' + '&from=' + begin + '&to=' + end + '&token=' + this.api_key;
+      console.log(url);
+      this.http.get<CompanyHistoricalData>(url).subscribe((data : CompanyHistoricalData) => {
+        this.company_historical_data = data;
+        this.price_chart_data = [];
+        for (let i = 0; i < this.company_historical_data.t.length; i++) {
+          var tmp = [];
+          tmp.push(this.company_historical_data.t[i] * 1000);
+          tmp.push(this.company_historical_data.c[i]);
+          this.price_chart_data.push(tmp);
+        }
+        if (this.chartOptions.series){
+          // this.chartOptions.series[0].color = this.getLineColor();
+          // this.line_color_changed = true;
+          // this.changeUpdateFlag();
+          if (this.chartOptions.series[0].type === 'line') {
+            this.chartOptions.series[0].data = this.price_chart_data;
+          }
+          this.chart_data_changed = true;
+          this.changeUpdateFlag();
+        }
+      });
+      console.log("getCompanyHistoricalData response");
+    }
+  }
 }
