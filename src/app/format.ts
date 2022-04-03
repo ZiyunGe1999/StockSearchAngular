@@ -59,3 +59,14 @@ export interface CompanyHistoricalData {
     t : number[],
     v : number[],
 }
+
+export interface CompanyNews {
+    datetime :	number,
+    headline :	string,
+    id :	number,
+    image :	string,
+    related :	string,
+    source :	string,
+    summary :	string,
+    url :	string,
+}

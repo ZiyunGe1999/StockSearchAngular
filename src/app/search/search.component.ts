@@ -80,6 +80,7 @@ export class SearchComponent implements OnInit {
     this.infoService.getCompanyLatestPrice(this.searchForm.value['symbol']);
     this.infoService.getCompanyPeers(this.searchForm.value['symbol']);
     this.infoService.ready = true;
+    this.infoService.getCompanyNews(this.searchForm.value['symbol']);
   }
 
 }

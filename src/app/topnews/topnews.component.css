@@ -1,0 +1,14 @@
+.news {
+    border:1px solid grey;
+    background-color: white;
+    font-size: small;
+    font-weight: lighter;
+    height: 100%;
+    padding: 0.5rem;
+    box-shadow: 5px 5px 3px #ccc;
+}
+
+.news_outside {
+    padding: 1rem;
+    height: 100%;
+}

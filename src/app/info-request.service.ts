@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AutoCompleteInfo, CompanyDescription, CompanyLatestPrice, CompanyHistoricalData } from './format';
+import { AutoCompleteInfo, CompanyDescription, CompanyLatestPrice, CompanyHistoricalData, CompanyNews } from './format';
 import { HttpClient } from '@angular/common/http';
 import * as Highcharts from 'highcharts';
 
@@ -15,6 +15,7 @@ export class InfoRequestService {
   conpmay_description = {} as CompanyDescription;
   company_latest_price = {}  as CompanyLatestPrice;
   company_historical_data = {}  as CompanyHistoricalData;
+  list_company_news : CompanyNews[] = [];
   company_peers : string[] = [];
   ready = false;
 
@@ -117,6 +118,7 @@ export class InfoRequestService {
       console.log(url);
       this.http.get<CompanyLatestPrice>(url).subscribe((data : CompanyLatestPrice) => {
         this.company_latest_price = data;
+        this.company_latest_price.dp = Math.round(this.company_latest_price.dp * 100) / 100;
         var cur_time = Math.round(Date.now().valueOf() / 1000);
         var getTimestamp : number;
         if (cur_time - this.company_latest_price.t > 5 * 60) {
@@ -181,6 +183,44 @@ export class InfoRequestService {
         }
       });
       console.log("getCompanyHistoricalData response");
+    }
+  }
+
+  transformNumber(d : number) {
+    if (d < 10) {
+      return '0' + d
+    }
+    else {
+      return d.toString();
+    }
+  }
+
+  getCompanyNews(q : string) {
+    if (typeof(q) != "undefined") {
+      q = q.toUpperCase();
+      var cur_time = Math.round(Date.now().valueOf());
+      var seven_days_before = cur_time - (7 * 24 * 60 * 60 * 1000);
+      var cur_date = new Date(cur_time);
+      var before_date = new Date(seven_days_before);
+      var month = this.transformNumber(cur_date.getMonth() + 1);
+      var cur_date_string = cur_date.getFullYear() + '-' + month + '-' + this.transformNumber(cur_date.getDate());
+      month = this.transformNumber(before_date.getMonth() + 1);
+      var before_date_string = before_date.getFullYear() + '-' + month + '-' + this.transformNumber(cur_date.getDate());
+
+      var url = 'https://finnhub.io/api/v1/company-news?symbol=' + q + '&from=' + before_date_string + '&to=' + cur_date_string + '&token=' + this.api_key;
+      console.log(url);
+      this.http.get<CompanyNews []>(url).subscribe((data : CompanyNews []) => {
+        this.list_company_news = [];
+        for (let i = 0; i < 20; i++) {
+          if (i < data.length) {
+            this.list_company_news.push(data[i]);
+          }
+          else {
+            break;
+          }
+        }
+      });
+      console.log("getCompanyNews response");
     }
   }
 }

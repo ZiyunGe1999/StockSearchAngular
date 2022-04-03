@@ -15,6 +15,7 @@ import { CompanylatestpriceComponent } from './companylatestprice/companylatestp
 import { SummaryComponent } from './summary/summary.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HighchartsChartModule } from 'highcharts-angular';
+import { TopnewsComponent } from './topnews/topnews.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { HighchartsChartModule } from 'highcharts-angular';
     InfoshowComponent,
     CompanydescriptionComponent,
     CompanylatestpriceComponent,
-    SummaryComponent
+    SummaryComponent,
+    TopnewsComponent
   ],
   imports: [
     BrowserModule,

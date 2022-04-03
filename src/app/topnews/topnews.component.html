@@ -1,0 +1,14 @@
+<div class="row">
+<div class="cart-item col-md-6" *ngFor="let item of this.infoService.list_company_news">
+    <div class="news_outside">
+        <div class="row news" (click)="open(item.headline)">
+            <div class="col-md-2">
+                <img [src]="item.image" width="100%">
+            </div>
+            <div class="col-md-10">
+                {{ item.headline }}
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
