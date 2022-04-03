@@ -1,0 +1,19 @@
+<div class="modal-header">
+    <h1 class="modal-title"><b>{{source}}</b> <br> <span style="font-size: small; color: grey;">{{date}}</span> </h1>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <span style="font-weight: bold;">{{ title }}</span> <br>
+    <span style="font-weight: lighter;">{{ summary }}</span> <br>
+    <span style="font-weight: lighter; color: grey">For more details click <a [href]="url" target="_blank">here</a></span>
+  </div>
+  <!-- <div class="modal-footer"> -->
+
+    <div style="text-align: left; border:1px solid grey; margin: 1rem; padding: 1rem;">
+        <span style="font-size: 1.2rem;">Share</span> <br> <br>
+        <a target="_blank" href="{{ twSrc }}"><img width="30px" src="../../assets/twitter-brands.svg"></a> &nbsp;
+        <a target="_blank" href="{{ fbSrc }}"><img width="30px" src="../../assets/facebook-square-brands.svg"></a>
+    </div>
+
+    <!-- <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button> -->
+  <!-- </div> -->
