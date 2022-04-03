@@ -1,7 +1,10 @@
+declare var require: any;
 import { Injectable } from '@angular/core';
 import { AutoCompleteInfo, CompanyDescription, CompanyLatestPrice, CompanyHistoricalData, CompanyNews } from './format';
 import { HttpClient } from '@angular/common/http';
-import * as Highcharts from 'highcharts';
+import * as Highcharts from "highcharts/highstock";
+require('highcharts/indicators/indicators')(Highcharts); // loads core and enables sma
+require('highcharts/indicators/volume-by-price')(Highcharts); // loads enables vbp
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +21,118 @@ export class InfoRequestService {
   list_company_news : CompanyNews[] = [];
   company_peers : string[] = [];
   ready = false;
+
+  // company_two_years_data = {} as CompanyHistoricalData;
+  ohlc : number[][] = [
+    [1521466200000, 177.32, 177.47, 173.66, 175.3],
+    [1521552600000, 175.24, 176.8, 174.94, 175.24],
+    [1521639000000, 175.04, 175.09, 171.26, 171.27],
+    [1521725400000, 170, 172.68, 168.6, 168.85]
+  ];
+  volume : number[][] = [
+    [1521466200000, 177.32],
+    [1521552600000, 175.24],
+    [1521639000000, 175.04],
+    [1521725400000, 170]
+  ];
+  chartsTabUpdateFlag  = false;
+  chartsTabHighCharts = Highcharts;
+  chartsTabOptions : Highcharts.Options = {
+    rangeSelector: {
+      selected: 2
+    },
+
+    title: {
+      text: 'Historical'
+    },
+
+    subtitle: {
+      text: 'With SMA and Volume by Price technical indicators'
+    },
+
+    yAxis: [{
+      startOnTick: false,
+      endOnTick: false,
+      labels: {
+        align: 'right',
+        x: -3
+      },
+      title: {
+        text: 'OHLC'
+      },
+      height: '60%',
+      lineWidth: 2,
+      resize: {
+        enabled: true
+      }
+    }, {
+      labels: {
+        align: 'right',
+        x: -3
+      },
+      title: {
+        text: 'Volume'
+      },
+      top: '65%',
+      height: '35%',
+      offset: 0,
+      lineWidth: 2
+    }],
+
+    tooltip: {
+      split: true
+    },
+
+    plotOptions: {
+      // series: {
+      //   dataGrouping: {
+      //     units: [[
+      //       'week',             // unit name
+      //       [1]               // allowed multiples
+      //     ], [
+      //       'month',
+      //       [1, 2, 3, 4, 6]
+      //     ]]
+      //   }
+      // }
+    },
+
+    series: [{
+      type: 'candlestick',
+      name: 'None',
+      id: 'ticker',
+      zIndex: 2,
+      data: this.ohlc
+    }, {
+      type: 'column',
+      name: 'Volume',
+      id: 'volume',
+      data: this.volume,
+      yAxis: 1
+    }, 
+    {
+      type: 'vbp',
+      linkedTo: 'ticker',
+      params: {
+        volumeSeriesID: 'volume'
+      },
+      dataLabels: {
+        enabled: false
+      },
+      zoneLines: {
+        enabled: false
+      }
+    }, 
+    {
+      type: 'sma',
+      linkedTo: 'ticker',
+      zIndex: 1,
+      marker: {
+        enabled: false
+      }
+    }
+  ]
+  }
 
   constructor(
     private http: HttpClient
@@ -153,6 +268,50 @@ export class InfoRequestService {
         console.log('peer: ' + item);
       }
       console.log("getCompanyPeers response");
+    }
+  }
+
+  getTwoYearsData (q : string) {
+    if (typeof(q) != "undefined") {
+      q = q.toUpperCase();
+      var end = Math.round(Date.now().valueOf() / 1000);
+      var begin = end - (2 * 365 * 24 * 60 * 60);
+      var url = 'https://finnhub.io/api/v1/stock/candle?symbol=' + q + '&resolution=D' + '&from=' + begin + '&to=' + end + '&token=' + this.api_key;
+      console.log(url);
+      this.http.get<CompanyHistoricalData>(url).subscribe((data : CompanyHistoricalData) => {
+        // this.company_two_years_data = data;
+        console.log("inside get");
+        this.ohlc = [];
+        this.volume = [];
+        for (let i = 0; i < data.t.length; i++) {
+          this.ohlc.push([
+          data.t[i] * 1000,
+          data.o[i],
+          data.h[i],
+          data.l[i],
+          data.c[i]
+          ]);
+          this.volume.push([
+            data.t[i] * 1000,
+            data.v[i]
+          ]);
+        }
+        if (this.chartsTabOptions.series){
+          this.chartsTabOptions.series[0].name = q;
+          if (this.chartsTabOptions.title) {
+            this.chartsTabOptions.title.text = q + ' Historical';
+          }
+          if (this.chartsTabOptions.series[0].type === 'candlestick') {
+            this.chartsTabOptions.series[0].data = this.ohlc;
+          }
+          if (this.chartsTabOptions.series[1].type === 'column') {
+            this.chartsTabOptions.series[1].data = this.volume;
+          }
+          this.chartsTabUpdateFlag = true;
+          console.log('going outside');
+        }
+      });
+      console.log("getTwoYearsData response");
     }
   }
 

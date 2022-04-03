@@ -81,6 +81,7 @@ export class SearchComponent implements OnInit {
     this.infoService.getCompanyPeers(this.searchForm.value['symbol']);
     this.infoService.ready = true;
     this.infoService.getCompanyNews(this.searchForm.value['symbol']);
+    this.infoService.getTwoYearsData(this.searchForm.value['symbol']);
   }
 
 }
