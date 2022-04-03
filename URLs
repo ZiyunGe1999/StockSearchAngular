@@ -1,0 +1,9 @@
+https://finnhub.io/api/v1/stock/profile2?symbol=<TICKER>&token=<API_Key >
+https://finnhub.io/api/v1/stock/candle?symbol=<TICKER>&resolution=<TIMEINTERV AL>&from=<UNIX_TIMESTAMP>&to=<UNIX_TIMESTAMP>1631627048&token=<API_KEY>
+https://finnhub.io/api/v1/quote?symbol=<TICKER>&token=<API_KEY>
+https://finnhub.io/api/v1/search?q=<QUERY>&token=<API_KEY>
+https://finnhub.io/api/v1/company-news?symbol=<TICKER>&from=<DA TE>&to=<DA TE>&token=<API_KEY>
+https://finnhub.io/api/v1/stock/recommendation?symbol=<TICKER>&token=<API_KEY>
+https://finnhub.io/api/v1/stock/social-sentiment?symbol=<TICKER>&from=2022-01- 01&token=<API_KEY>
+https://finnhub.io/api/v1/stock/peers?symbol=<TICKER>&token=<API_KEY>
+https://finnhub.io/api/v1/stock/earnings?symbol=<TICKER>&token=<API_KEY>

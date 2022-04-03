@@ -13,7 +13,6 @@ export class InfoRequestService {
 
   autocomplete_infos = {} as AutoCompleteInfo;
   symbol_list : string[] = [];
-  api_key = 'c87v1q2ad3iet0qj41mg';
 
   conpmay_description = {} as CompanyDescription;
   company_latest_price = {}  as CompanyLatestPrice;
@@ -189,7 +188,7 @@ export class InfoRequestService {
   getAutoCompleteInfo(q : string) {
     if (typeof(q) != "undefined" && q.length > 1) {
       q = q.toUpperCase();
-      var url = 'https://finnhub.io/api/v1/search?q=' + q + '&token=' + this.api_key;
+      var url = '/api/v1/search?q=' + q;
       console.log(url);
       this.http.get<AutoCompleteInfo>(url).subscribe((data : AutoCompleteInfo) => this.autocomplete_infos = {
         count : data.count,
@@ -209,7 +208,7 @@ export class InfoRequestService {
   getCompnayDescription(q : string) {
     if (typeof(q) != "undefined") {
       q = q.toUpperCase();
-      var url = 'https://finnhub.io/api/v1/stock/profile2?symbol=' + q + '&token=' + this.api_key;
+      var url = '/api/v1/stock/profile2?symbol=' + q;
       console.log(url);
       this.http.get<CompanyDescription>(url).subscribe((data : CompanyDescription) => {
         this.conpmay_description = data;
@@ -229,7 +228,7 @@ export class InfoRequestService {
   getCompanyLatestPrice(q : string) {
     if (typeof(q) != "undefined") {
       q = q.toUpperCase();
-      var url = 'https://finnhub.io/api/v1/quote?symbol=' + q + '&token=' + this.api_key;
+      var url = '/api/v1/quote?symbol=' + q;
       console.log(url);
       this.http.get<CompanyLatestPrice>(url).subscribe((data : CompanyLatestPrice) => {
         this.company_latest_price = data;
@@ -256,7 +255,7 @@ export class InfoRequestService {
   getCompanyPeers(q : string) {
     if (typeof(q) != "undefined") {
       q = q.toUpperCase();
-      var url = 'https://finnhub.io/api/v1/stock/peers?symbol=' + q + '&token=' + this.api_key;
+      var url = '/api/v1/stock/peers?symbol=' + q;
       console.log(url);
       this.http.get<string []>(url).subscribe({
         next: data =>{
@@ -276,7 +275,7 @@ export class InfoRequestService {
       q = q.toUpperCase();
       var end = Math.round(Date.now().valueOf() / 1000);
       var begin = end - (2 * 365 * 24 * 60 * 60);
-      var url = 'https://finnhub.io/api/v1/stock/candle?symbol=' + q + '&resolution=D' + '&from=' + begin + '&to=' + end + '&token=' + this.api_key;
+      var url = '/api/v1/stock/candle?symbol=' + q + '&resolution=D' + '&from=' + begin + '&to=' + end;
       console.log(url);
       this.http.get<CompanyHistoricalData>(url).subscribe((data : CompanyHistoricalData) => {
         // this.company_two_years_data = data;
@@ -319,7 +318,7 @@ export class InfoRequestService {
     if (typeof(q) != "undefined") {
       q = q.toUpperCase();
       var begin = end - (6 * 60 * 60);
-      var url = 'https://finnhub.io/api/v1/stock/candle?symbol=' + q + '&resolution=5' + '&from=' + begin + '&to=' + end + '&token=' + this.api_key;
+      var url = '/api/v1/stock/candle?symbol=' + q + '&resolution=5' + '&from=' + begin + '&to=' + end;
       console.log(url);
       this.http.get<CompanyHistoricalData>(url).subscribe((data : CompanyHistoricalData) => {
         this.company_historical_data = data;
@@ -366,7 +365,7 @@ export class InfoRequestService {
       month = this.transformNumber(before_date.getMonth() + 1);
       var before_date_string = before_date.getFullYear() + '-' + month + '-' + this.transformNumber(cur_date.getDate());
 
-      var url = 'https://finnhub.io/api/v1/company-news?symbol=' + q + '&from=' + before_date_string + '&to=' + cur_date_string + '&token=' + this.api_key;
+      var url = '/api/v1/company-news?symbol=' + q + '&from=' + before_date_string + '&to=' + cur_date_string;
       console.log(url);
       this.http.get<CompanyNews []>(url).subscribe((data : CompanyNews []) => {
         this.list_company_news = [];
