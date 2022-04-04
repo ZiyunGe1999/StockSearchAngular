@@ -47,3 +47,7 @@
 .mat-tab-group {
     margin-bottom: 48px;
   }
+
+.alert {
+    text-align: center;
+}

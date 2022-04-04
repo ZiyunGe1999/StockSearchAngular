@@ -5,6 +5,7 @@ import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import { FormBuilder } from '@angular/forms';
 
 import {InfoRequestService} from '../info-request.service';
+import { AlertService } from '../alert.service';
 
 const states = ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado',
   'Connecticut', 'Delaware', 'District Of Columbia', 'Federated States Of Micronesia', 'Florida', 'Georgia',
@@ -25,6 +26,7 @@ export class SearchComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     public infoService : InfoRequestService,
+    public alertService : AlertService
     ) { }
 
   ngOnInit(): void {
