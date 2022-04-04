@@ -1,6 +1,6 @@
 declare var require: any;
 import { Injectable } from '@angular/core';
-import { AutoCompleteInfo, CompanyDescription, CompanyLatestPrice, CompanyHistoricalData, CompanyNews, SocialSentiment } from './format';
+import { AutoCompleteInfo, CompanyDescription, CompanyLatestPrice, CompanyHistoricalData, CompanyNews, SocialSentiment, CompanyEarningItem } from './format';
 import { HttpClient } from '@angular/common/http';
 import * as Highcharts from "highcharts/highstock";
 require('highcharts/indicators/indicators')(Highcharts); // loads core and enables sma
@@ -210,6 +210,7 @@ export class InfoRequestService {
     this.getCompanyNews(symbol);
     this.getTwoYearsData(symbol);
     this.getSocialSentiment(symbol);
+    this.getCompanyEarnings(symbol);
     this.location.go(`/search/${symbol}`);
   }
 
@@ -452,4 +453,136 @@ export class InfoRequestService {
       console.log("getSocialSentiment response");
     }
   }
+
+  high_charts = Highcharts;
+  actual : number[] = [];
+  estimate : number[] = [];
+  chartEarningUpdateFlag = false;
+  getCompanyEarnings(q : string) {
+    if (typeof(q) != 'undefined') {
+      q = q.toUpperCase();
+      var url = '/api/v1/stock/earnings?symbol=' + q;
+      console.log(url);
+      this.http.get<CompanyEarningItem[]>(url).subscribe((data : CompanyEarningItem[]) => {
+        this.actual = [];
+        this.estimate = [];
+        for (let item of data) {
+          if (item.actual) {
+            this.actual.push(item.actual);
+          }
+          else {
+            this.actual.push(0);
+          }
+          if (item.estimate) {
+            this.estimate.push(item.estimate);
+          }
+          else {
+            this.estimate.push(0);
+          }
+        }
+
+        if (this.chartOptions_earning.series) {
+          if (this.chartOptions_earning.series[0].type === 'line') {
+            this.chartOptions_earning.series[0].data = this.actual;
+          }
+          if (this.chartOptions_earning.series[1].type === 'line') {
+            this.chartOptions_earning.series[1].data = this.estimate;
+          }
+        }
+        this.chartEarningUpdateFlag = true;
+        console.log(`actual: ${this.actual}`);
+        console.log(`estimate: ${this.estimate}`);
+      });
+    }
+    console.log("getCompanyEarnings response");
+  }
+
+  chartOptions_earning : Highcharts.Options = {
+    chart: {
+      type: 'line',
+      // inverted: true
+    },
+    title: {
+        text: 'Historical EPS Surprises'
+    },
+    // subtitle: {
+    //     text: 'According to the Standard Atmosphere Model'
+    // },
+    xAxis: {
+        // reversed: false,
+        // title: {
+        //     enabled: true,
+        //     text: 'Altitude'
+        // },
+        // labels: {
+        //     format: '{value} km'
+        // },
+        // accessibility: {
+        //     rangeDescription: 'Range: 0 to 80 km.'
+        // },
+        // maxPadding: 0.05,
+        // showLastLabel: true
+        type: 'datetime',
+        categories: ['2022-12-31', '2022-09-30', '2022-06-30', '2022-03-31']
+    },
+    yAxis: {
+        title: {
+            text: 'Quarterly EPS'
+        },
+        min: 0,
+        // labels: {
+        //     format: '{value}°'
+        // },
+        // accessibility: {
+        //     rangeDescription: 'Range: -90°C to 20°C.'
+        // },
+        // lineWidth: 2
+    },
+    legend: {
+      align: 'center',
+      x: 40,
+      verticalAlign: 'bottom',
+      y: 0,
+      floating: true,
+      backgroundColor:
+          'white',
+      borderColor: '#CCC',
+      borderWidth: 1,
+      shadow: false
+  },
+    tooltip: {
+        // headerFormat: `<b>{xAxis.categories}</b><br/>\n
+        //               Surprise: {series[0].data}`,
+        // pointFormat: `{xAxis.categories[point.x - 1]}<br/>
+        //              Surprise: {series[0].data}`,
+        xDateFormat: '%Y-%m-%d',
+        shared: true
+
+    },
+    // plotOptions: {
+    //     spline: {
+    //         marker: {
+    //             enable: true
+    //         }
+    //     }
+    // },
+    series: [
+      // {
+      //   name: 'Surprise',
+      //   data: this.surprise,
+      //   type: 'line',
+      //   visible: false
+      // },
+    {
+      name: 'Actual',
+      data: this.actual,
+      type: 'line'
+    },{
+      name: 'Estimate',
+      data: this.estimate,
+      type: 'line'
+    }],
+
+}
+
 }
