@@ -16,7 +16,7 @@
         <div>
             <b>Company peers: </b>
             <div style="display: inline-block;" *ngFor="let item of infoService.company_peers">
-                <span>{{ item }}</span> &nbsp;
+                <a [href]="'/search/' + item"><span>{{ item }}</span></a> &nbsp;
             </div>
         </div>
       </div>
