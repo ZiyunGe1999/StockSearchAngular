@@ -20,7 +20,7 @@ export class InfoRequestService {
 
   conpmay_description = {} as CompanyDescription;
   company_latest_price = {}  as CompanyLatestPrice;
-  company_historical_data = {}  as CompanyHistoricalData;
+  // company_historical_data = {}  as CompanyHistoricalData;
   // social_sentiment = {} as SocialSentiment;
   redditMention : number = 0;
   twitterMention : number = 0;
@@ -191,14 +191,14 @@ export class InfoRequestService {
     }]
   };
 
-  changeUpdateFlag() {
-    if (this.sticker_changed && this.line_color_changed && this.chart_data_changed) {
-      this.updateFlag = true;
-      this.sticker_changed = false;
-      this.line_color_changed = false;
-      this.chart_data_changed = false;
-    }
-  }
+  // changeUpdateFlag() {
+  //   if (this.sticker_changed && this.line_color_changed && this.chart_data_changed) {
+  //     this.updateFlag = true;
+  //     this.sticker_changed = false;
+  //     this.line_color_changed = false;
+  //     this.chart_data_changed = false;
+  //   }
+  // }
 
   onSubmit(symbol : string): void {
     // window.alert('symbol: ' + this.searchForm.value['symbol']);
@@ -249,7 +249,8 @@ export class InfoRequestService {
             this.chartOptions.series[0].name = this.conpmay_description.ticker;
           }
           this.sticker_changed = true;
-          this.changeUpdateFlag();
+          // this.changeUpdateFlag();
+          this.updateFlag = true;
         }
         if (JSON.stringify(data) != '{}') {
           this.readyToShowInfo = true;
@@ -278,7 +279,8 @@ export class InfoRequestService {
         if (this.chartOptions.series){
           this.chartOptions.series[0].color = this.getLineColor();
           this.line_color_changed = true;
-          this.changeUpdateFlag();
+          // this.changeUpdateFlag();
+          this.updateFlag = true;
           this.getCompanyHistoricalData(q, getTimestamp);
         }
       });
@@ -355,12 +357,12 @@ export class InfoRequestService {
       var url = '/api/v1/stock/candle?symbol=' + q + '&resolution=5' + '&from=' + begin + '&to=' + end;
       console.log(url);
       this.http.get<CompanyHistoricalData>(url).subscribe((data : CompanyHistoricalData) => {
-        this.company_historical_data = data;
+        // this.company_historical_data = data;
         this.price_chart_data = [];
-        for (let i = 0; i < this.company_historical_data.t.length; i++) {
+        for (let i = 0; i < data.t.length; i++) {
           var tmp = [];
-          tmp.push(this.company_historical_data.t[i] * 1000);
-          tmp.push(this.company_historical_data.c[i]);
+          tmp.push(data.t[i] * 1000);
+          tmp.push(data.c[i]);
           this.price_chart_data.push(tmp);
         }
         if (this.chartOptions.series){
@@ -371,8 +373,15 @@ export class InfoRequestService {
             this.chartOptions.series[0].data = this.price_chart_data;
           }
           this.chart_data_changed = true;
-          this.changeUpdateFlag();
+          // this.changeUpdateFlag();
+          this.updateFlag = true;
         }
+
+        console.log('waiting for 15s');
+        setTimeout(() => {
+          console.log('waited');
+          this.getCompanyLatestPrice(q);
+        }, 10 * 1000);
       });
       console.log("getCompanyHistoricalData response");
     }
