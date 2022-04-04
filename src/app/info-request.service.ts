@@ -213,6 +213,7 @@ export class InfoRequestService {
     this.getSocialSentiment(symbol);
     this.getCompanyEarnings(symbol);
     this.getCompanyRecommendation(symbol);
+    this.routeTicker = symbol.toUpperCase();
     this.location.go(`/search/${symbol}`);
   }
 
@@ -380,7 +381,10 @@ export class InfoRequestService {
         console.log('waiting for 15s');
         setTimeout(() => {
           console.log('waited');
-          this.getCompanyLatestPrice(q);
+          console.log(`q: ${q} | routerTicker: ${this.routeTicker}`);
+          if (q === this.routeTicker) {
+            this.getCompanyLatestPrice(this.routeTicker);
+          }
         }, 10 * 1000);
       });
       console.log("getCompanyHistoricalData response");
