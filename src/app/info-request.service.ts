@@ -25,6 +25,8 @@ export class InfoRequestService {
   ready = false;
   readyToShowInfo = false;
 
+  watchlist_price : {[key:string]: number[]} = {};
+
   // company_two_years_data = {} as CompanyHistoricalData;
   ohlc : number[][] = [
     [1521466200000, 177.32, 177.47, 173.66, 175.3],
@@ -400,6 +402,18 @@ export class InfoRequestService {
         }
       });
       console.log("getCompanyNews response");
+    }
+  }
+
+  getWatchListPrice(q : string) {
+    if (typeof(q) != "undefined") {
+      q = q.toUpperCase();
+      var url = '/api/v1/quote?symbol=' + q;
+      console.log(url);
+      this.http.get<CompanyLatestPrice>(url).subscribe((data : CompanyLatestPrice) => {
+        this.watchlist_price[q] = [data.c, data.d, Math.round(data.dp * 100) / 100];
+      });
+      console.log("getWatchListPrice response");
     }
   }
 }

@@ -19,8 +19,10 @@
     </div>
 </div>
 
-<div class="container alert" *ngFor="let alert of alertService.alerts">
+<div class="container">
+<p class="alert" *ngFor="let alert of alertService.alerts">
 <ngb-alert [type]="alert.type" (closed)="alertService.close(alert)">{{ alert.message }}</ngb-alert>
+</p>
 </div>
 
 <div *ngIf="infoService.readyToShowInfo" class="container">

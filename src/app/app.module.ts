@@ -17,6 +17,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { TopnewsComponent } from './topnews/topnews.component';
 import { ChartsTabComponent } from './charts-tab/charts-tab.component';
+import { WatchlistComponent } from './watchlist/watchlist.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { ChartsTabComponent } from './charts-tab/charts-tab.component';
     CompanylatestpriceComponent,
     SummaryComponent,
     TopnewsComponent,
-    ChartsTabComponent
+    ChartsTabComponent,
+    WatchlistComponent
   ],
   imports: [
     BrowserModule,

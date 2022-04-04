@@ -1,0 +1,9 @@
+.watchlist_tab {
+    border: 1px solid black;
+    margin: 1rem;
+    box-shadow: 5px 5px 3px #ccc;
+}
+
+.inlineblock {
+    display: inline-block;
+}

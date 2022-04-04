@@ -1,0 +1,31 @@
+<div class="container">
+    <h1 style="font-size: x-large; margin-top: 1rem; margin-bottom: 1rem;">
+        My Watchlist
+    </h1>
+    <div *ngFor="let ticker of watchService.getWatchList()" class="watch_stock">
+        <div class="row watchlist_tab">
+            <div class="col-6">
+                <div style="font-size: large; margin: 0.5rem;">
+                    {{ ticker }}
+                </div>
+                <div style="margin: 0.5rem;">
+                    {{ watchService.getWatchlistItem(ticker) }}
+                </div>
+            </div>
+            <div class="col-5" style="text-align: right;">
+                <div style="margin: 0.5rem;" [style.color]="getPriceColor(ticker)" >
+                    <div style="font-size: large;">
+                        {{ infoService.watchlist_price[ticker][0] }}
+                    </div>
+                    <div>
+                        <div class="inlineblock"><img width="20px" [src]="getUpDownArrow(ticker)">{{ infoService.watchlist_price[ticker][1] }}</div> &nbsp;
+                        <div class="inlineblock">{{ '(' + infoService.watchlist_price[ticker][2] + '%)' }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1" style="text-align: right;">
+                <svg style="width: 7px;" (click)="watchService.removeWatch(ticker)"  aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" class="svg-inline--fa fa-times fa-w-11 search_inside" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path></svg>
+            </div>
+        </div>
+    </div>
+</div>

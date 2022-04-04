@@ -6,6 +6,7 @@ import { FormBuilder } from '@angular/forms';
 
 import {InfoRequestService} from '../info-request.service';
 import { AlertService } from '../alert.service';
+import {Location} from '@angular/common';
 
 const states = ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado',
   'Connecticut', 'Delaware', 'District Of Columbia', 'Federated States Of Micronesia', 'Florida', 'Georgia',
@@ -26,11 +27,22 @@ export class SearchComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     public infoService : InfoRequestService,
-    public alertService : AlertService
+    public alertService : AlertService,
+    private location : Location
     ) { }
 
-  ngOnInit(): void {
-  }
+    ngOnInit() {
+      // console.log(`current location: ${this.location.path()}`);
+      // console.log(`current url: ${this.route.url}`);
+      // var routeParams = this.route.snapshot.paramMap;
+      var cur_path = this.location.path().toString();
+      console.log(cur_path);
+      this.infoService.routeTicker = cur_path.split('/')[2];
+      console.log(`route ticker: ${this.infoService.routeTicker}`);
+      if (this.infoService.routeTicker != 'home') {
+        this.infoService.onSubmit(this.infoService.routeTicker);
+      }
+    }
 
   public model: any;
   init_color = "#2323AC";

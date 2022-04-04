@@ -28,16 +28,16 @@ export class AppComponent {
       // }
     }
 
-  ngOnInit() {
-    // console.log(`current location: ${this.location.path()}`);
-    // console.log(`current url: ${this.route.url}`);
-    // var routeParams = this.route.snapshot.paramMap;
-    var cur_path = this.location.path().toString();
-    console.log(cur_path);
-    this.infoService.routeTicker = cur_path.split('/')[2];
-    console.log(`route ticker: ${this.infoService.routeTicker}`);
-    if (this.infoService.routeTicker != 'home') {
-      this.infoService.onSubmit(this.infoService.routeTicker);
-    }
-  }
+  // ngOnInit() {
+  //   // console.log(`current location: ${this.location.path()}`);
+  //   // console.log(`current url: ${this.route.url}`);
+  //   // var routeParams = this.route.snapshot.paramMap;
+  //   var cur_path = this.location.path().toString();
+  //   console.log(cur_path);
+  //   this.infoService.routeTicker = cur_path.split('/')[2];
+  //   console.log(`route ticker: ${this.infoService.routeTicker}`);
+  //   if (this.infoService.routeTicker != 'home') {
+  //     this.infoService.onSubmit(this.infoService.routeTicker);
+  //   }
+  // }
 }
