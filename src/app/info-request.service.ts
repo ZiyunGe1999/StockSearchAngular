@@ -5,11 +5,14 @@ import { HttpClient } from '@angular/common/http';
 import * as Highcharts from "highcharts/highstock";
 require('highcharts/indicators/indicators')(Highcharts); // loads core and enables sma
 require('highcharts/indicators/volume-by-price')(Highcharts); // loads enables vbp
+import { Location } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InfoRequestService {
+
+  routeTicker = 'home';
 
   autocomplete_infos = {} as AutoCompleteInfo;
   symbol_list : string[] = [];
@@ -20,6 +23,7 @@ export class InfoRequestService {
   list_company_news : CompanyNews[] = [];
   company_peers : string[] = [];
   ready = false;
+  readyToShowInfo = false;
 
   // company_two_years_data = {} as CompanyHistoricalData;
   ohlc : number[][] = [
@@ -134,7 +138,8 @@ export class InfoRequestService {
   }
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private location : Location
   ) { }
 
   getLineColor() {
@@ -185,6 +190,19 @@ export class InfoRequestService {
     }
   }
 
+  onSubmit(symbol : string): void {
+    // window.alert('symbol: ' + this.searchForm.value['symbol']);
+    this.readyToShowInfo = false;
+    this.ready = false;
+    this.getCompnayDescription(symbol);
+    this.getCompanyLatestPrice(symbol);
+    this.getCompanyPeers(symbol);
+    this.ready = true;
+    this.getCompanyNews(symbol);
+    this.getTwoYearsData(symbol);
+    this.location.go(`/search/${symbol}`);
+  }
+
   getAutoCompleteInfo(q : string) {
     if (typeof(q) != "undefined" && q.length > 1) {
       q = q.toUpperCase();
@@ -219,6 +237,9 @@ export class InfoRequestService {
           }
           this.sticker_changed = true;
           this.changeUpdateFlag();
+        }
+        if (JSON.stringify(data) != '{}') {
+          this.readyToShowInfo = true;
         }
       });
       console.log("getCompnayDescription response");

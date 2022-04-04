@@ -9,14 +9,26 @@ app.listen(port, (req, res)=>{
   console.log(`RUNNING on port ${port}`);
 });
 
-app.use(express.static(path.join(__dirname, 'dist/stock-search')));
+// app.use(express.static(path.join(__dirname, 'dist/stock-search')));
 
 app.use('/api/v1', api);
 
 // Catch all other routes request and return it to the index
 
-app.get('*', (req, res)=>{
-  res.sendFile(path.join(__dirname, 'dist/stock-search/index.html'));
+app.get('/search/*', (req, res)=>{
+    console.log(`here ${req.url}`)
+    res.sendFile(path.join(__dirname, 'dist/stock-search/index.html'));
+  })
+
+app.get('/*', (req, res)=>{
+    console.log(`here ${req.url}`)
+    if (req.url === '/') {
+        // res.sendFile(path.join(__dirname, 'dist/stock-search/index.html'));
+        res.redirect('/search/home');
+    }
+    else {
+        res.sendFile(path.join(__dirname, `dist/stock-search${req.url}`));
+    }
 })
 
 // respond with "hello world" when a GET request is made to the homepage
