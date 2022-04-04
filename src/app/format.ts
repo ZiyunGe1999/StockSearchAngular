@@ -95,3 +95,13 @@ export interface CompanyEarningItem {
     surprisePercent : number | null
     symbol : string
 }
+
+export interface RecommendationItem {
+    buy	:number
+    hold:	number
+    period:	string
+    sell	:number
+    strongBuy:	number
+    strongSell:	number
+    symbol	:string
+}

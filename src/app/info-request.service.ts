@@ -1,11 +1,12 @@
 declare var require: any;
 import { Injectable } from '@angular/core';
-import { AutoCompleteInfo, CompanyDescription, CompanyLatestPrice, CompanyHistoricalData, CompanyNews, SocialSentiment, CompanyEarningItem } from './format';
+import { AutoCompleteInfo, CompanyDescription, CompanyLatestPrice, CompanyHistoricalData, CompanyNews, SocialSentiment, CompanyEarningItem, RecommendationItem } from './format';
 import { HttpClient } from '@angular/common/http';
 import * as Highcharts from "highcharts/highstock";
 require('highcharts/indicators/indicators')(Highcharts); // loads core and enables sma
 require('highcharts/indicators/volume-by-price')(Highcharts); // loads enables vbp
 import { Location } from '@angular/common';
+import { TOUCH_BUFFER_MS } from '@angular/cdk/a11y/input-modality/input-modality-detector';
 
 @Injectable({
   providedIn: 'root'
@@ -211,6 +212,7 @@ export class InfoRequestService {
     this.getTwoYearsData(symbol);
     this.getSocialSentiment(symbol);
     this.getCompanyEarnings(symbol);
+    this.getCompanyRecommendation(symbol);
     this.location.go(`/search/${symbol}`);
   }
 
@@ -582,7 +584,143 @@ export class InfoRequestService {
       data: this.estimate,
       type: 'line'
     }],
+  }
 
-}
+  trendTimes : string[] = [];
+  strong_buy : number[] = [];
+  buy : number[] = [];
+  hold : number[] = [];
+  sell : number[] = [];
+  strong_sell : number[] = [];
+  trendUpdateFlag = false;
+  getCompanyRecommendation(q : string) {
+    if (typeof(q) != 'undefined') {
+      q = q.toUpperCase();
+      var url = '/api/v1/stock/recommendation?symbol=' + q;
+      console.log(url);
+      this.http.get<RecommendationItem[]>(url).subscribe((data : RecommendationItem[]) => {
+        this.trendTimes = [];
+        this.strong_buy = [];
+        this.buy  = [];
+        this.hold  = [];
+        this.sell  = [];
+        this.strong_sell = [];
+        for (let i = 0; i < data.length; i++) {
+          var item = data[i];
+          this.trendTimes.push(item.period);
+          this.strong_buy.push(item.strongBuy);
+          this.buy.push(item.buy);
+          this.hold.push(item.hold);
+          this.sell.push(item.sell);
+          this.strong_sell.push(item.strongSell);
+        }
+        if (this.chartOptions_trend.series) {
+          if (this.chartOptions_trend.series[0].type === 'column') {
+            this.chartOptions_trend.series[0].data = this.strong_buy;
+          }
+          if (this.chartOptions_trend.series[1].type === 'column') {
+            this.chartOptions_trend.series[1].data = this.buy;
+          }
+          if (this.chartOptions_trend.series[2].type === 'column') {
+            this.chartOptions_trend.series[2].data = this.hold;
+          }
+          if (this.chartOptions_trend.series[3].type === 'column') {
+            this.chartOptions_trend.series[3].data = this.sell;
+          }
+          if (this.chartOptions_trend.series[4].type === 'column') {
+            this.chartOptions_trend.series[4].data = this.strong_sell;
+          }
+        }
+        if (this.chartOptions_trend.xAxis && 'categories' in this.chartOptions_trend.xAxis) {
+          this.chartOptions_trend.xAxis.categories = this.trendTimes;
+        }
+        this.trendUpdateFlag = true;
+        console.log(`trends times: ${this.trendTimes}`);
+      });
+    }
+    console.log("getCompanyRecommendation response");
+  }
+
+  chartOptions_trend: Highcharts.Options = {
+    chart: {
+      type: 'column'
+    },
+    title: {
+        text: 'Recommendation Trends'
+    },
+    xAxis: {
+        type: 'datetime',
+        categories: this.trendTimes
+        // dateTimeLabelFormats: {
+        //   month: '%e. %b',
+        //   year: '%b'
+        // }
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: '#Analysis'
+        },
+        stackLabels: {
+            enabled: true,
+            style: {
+                fontWeight: 'bold',
+                color: ( // theme
+                    'red' && 'blue'
+                ) || 'gray'
+            }
+        }
+    },
+    legend: {
+        align: 'center',
+        x: 50,
+        verticalAlign: 'bottom',
+        y: 0,
+        floating: true,
+        backgroundColor:
+            'white',
+        borderColor: '#CCC',
+        borderWidth: 1,
+        shadow: false
+    },
+    tooltip: {
+        headerFormat: '<b>{point.x}</b><br/>',
+        pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+    },
+    plotOptions: {
+        column: {
+            stacking: 'normal',
+            dataLabels: {
+                enabled: true
+            }
+        }
+    },
+    series: [{
+        name: 'Strong Buy',
+        data: this.strong_buy,
+        type: 'column',
+        color: '#1C6D37',
+    }, {
+        name: 'Buy',
+        data: this.buy,
+        type: 'column',
+        color: '#20AD50'
+    }, {
+        name: 'Hold',
+        data: this.hold,
+        type: 'column',
+        color: '#A17A15'
+    }, {
+        name: 'Sell',
+        data: this.sell,
+        type: 'column',
+        color: '#C74849'
+    }, {
+        name: 'Strong Sell',
+        data: this.strong_sell,
+        type: 'column',
+        color: '#67272A'
+    }]
+  }
 
 }
