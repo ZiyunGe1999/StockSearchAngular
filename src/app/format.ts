@@ -70,3 +70,19 @@ export interface CompanyNews {
     summary :	string,
     url :	string,
 }
+
+export interface SocialSentimentItem {
+    atTime:	string,
+    mention:	number,
+    positiveScore:	number,
+    negativeScore:	number,
+    positiveMention:	number,
+    negativeMention:	number,
+    score: number,
+}
+
+export interface SocialSentiment {
+    reddit: SocialSentimentItem[],
+    symbol: string,
+    twitter: SocialSentimentItem[]
+}

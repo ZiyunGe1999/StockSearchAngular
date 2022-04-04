@@ -1,6 +1,6 @@
 declare var require: any;
 import { Injectable } from '@angular/core';
-import { AutoCompleteInfo, CompanyDescription, CompanyLatestPrice, CompanyHistoricalData, CompanyNews } from './format';
+import { AutoCompleteInfo, CompanyDescription, CompanyLatestPrice, CompanyHistoricalData, CompanyNews, SocialSentiment } from './format';
 import { HttpClient } from '@angular/common/http';
 import * as Highcharts from "highcharts/highstock";
 require('highcharts/indicators/indicators')(Highcharts); // loads core and enables sma
@@ -20,6 +20,13 @@ export class InfoRequestService {
   conpmay_description = {} as CompanyDescription;
   company_latest_price = {}  as CompanyLatestPrice;
   company_historical_data = {}  as CompanyHistoricalData;
+  // social_sentiment = {} as SocialSentiment;
+  redditMention : number = 0;
+  twitterMention : number = 0;
+  redditPositiveMention : number = 0;
+  twitterPositiveMention : number = 0;
+  redditNegativeMention : number = 0;
+  twitterNegativeMention : number = 0;
   list_company_news : CompanyNews[] = [];
   company_peers : string[] = [];
   ready = false;
@@ -202,6 +209,7 @@ export class InfoRequestService {
     this.ready = true;
     this.getCompanyNews(symbol);
     this.getTwoYearsData(symbol);
+    this.getSocialSentiment(symbol);
     this.location.go(`/search/${symbol}`);
   }
 
@@ -414,6 +422,34 @@ export class InfoRequestService {
         this.watchlist_price[q] = [data.c, data.d, Math.round(data.dp * 100) / 100];
       });
       console.log("getWatchListPrice response");
+    }
+  }
+
+  getSocialSentiment(q : string) {
+    if (typeof(q) != "undefined") {
+      q = q.toUpperCase();
+      var url = '/api/v1/stock/social-sentiment?symbol=' + q + '&from=2022-01-01';
+      console.log(url);
+      this.http.get<SocialSentiment>(url).subscribe((data : SocialSentiment) => {
+        this.redditMention = 0;
+        this.twitterMention = 0;
+        this.twitterPositiveMention = 0;
+        this.twitterNegativeMention = 0;
+        this.redditPositiveMention = 0;
+        this.redditNegativeMention = 0;
+        for (let i = 0; i < data.reddit.length; i++) {
+          var reddit = data.reddit[i];
+          this.redditMention += reddit.mention;
+          this.redditPositiveMention += reddit.positiveMention;
+          this.redditNegativeMention += reddit.negativeMention;
+
+          var twitter = data.twitter[i];
+          this.twitterMention += twitter.mention;
+          this.twitterPositiveMention += twitter.positiveMention;
+          this.twitterNegativeMention += twitter.negativeMention;
+        }
+      });
+      console.log("getSocialSentiment response");
     }
   }
 }

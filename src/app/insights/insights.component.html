@@ -1,0 +1,36 @@
+<div style="font-size: x-large; text-align: center;">
+    Social Sentiments
+</div>
+
+<div id="social-table">
+    <table border="1" style="margin: auto;">
+      <tr>
+          <td class="tb-col"><b>{{ infoService.conpmay_description.name }}</b></td>
+          <td class="tb-col"><b>Reddit</b></td>
+          <td class="tb-col"><b>Twitter</b></td>
+      </tr>
+      <tr>
+          <td class="tb-col"><b>Total Mentions</b></td>
+          <td>{{ infoService.redditMention }}</td>
+          <td>{{ infoService.twitterMention }}</td>
+      </tr>
+      <tr>
+        <td class="tb-col"><b>Positive Mentions</b></td>
+        <td>{{ infoService.redditPositiveMention }}</td>
+        <td>{{ infoService.twitterPositiveMention }}</td>
+      </tr>
+      <tr>
+        <td class="tb-col"><b>Negative Mentions</b></td>
+        <td>{{ infoService.redditNegativeMention }}</td>
+        <td>{{ infoService.twitterNegativeMention }}</td>
+      </tr>
+    </table>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+    </div>
+    <div class="col-md-6">
+
+    </div>
+</div>

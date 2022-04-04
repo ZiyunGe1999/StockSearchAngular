@@ -18,6 +18,7 @@ import { HighchartsChartModule } from 'highcharts-angular';
 import { TopnewsComponent } from './topnews/topnews.component';
 import { ChartsTabComponent } from './charts-tab/charts-tab.component';
 import { WatchlistComponent } from './watchlist/watchlist.component';
+import { InsightsComponent } from './insights/insights.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { WatchlistComponent } from './watchlist/watchlist.component';
     SummaryComponent,
     TopnewsComponent,
     ChartsTabComponent,
-    WatchlistComponent
+    WatchlistComponent,
+    InsightsComponent
   ],
   imports: [
     BrowserModule,

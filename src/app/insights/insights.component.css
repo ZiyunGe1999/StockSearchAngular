@@ -1,0 +1,10 @@
+#social-table{
+    text-align: center;
+    /* display: inline-block; */
+    margin: 0 auto;
+  }
+
+  .tb-col{
+    background-color: #EAECEF;
+    padding: 5px;
+  }
