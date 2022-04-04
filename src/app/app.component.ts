@@ -15,7 +15,7 @@ export class AppComponent {
   // this.infoService. routeTicker = String(this.routeParams.get('ticker'));
   constructor(
     private route: ActivatedRoute,
-    private infoService : InfoRequestService,
+    public infoService : InfoRequestService,
     public location : Location
     ) {
       // console.log(`current location: ${this.location.path()}`);

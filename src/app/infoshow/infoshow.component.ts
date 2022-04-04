@@ -22,7 +22,7 @@ export class InfoshowComponent implements OnInit {
       return 'red';
     }
     else {
-      return 'greed';
+      return 'green';
     }
   }
 

@@ -13,3 +13,14 @@
     font-size: 1rem;
     font-weight: lighter;
 }
+
+.trade_button {
+    display: inline-block;
+    width: 60px;
+    height: 35px;
+    color: white;
+    margin: 0.2rem;
+    font-size: large;
+    border: 1px thin black;
+    text-align: center;
+}

@@ -1,0 +1,20 @@
+<div class="modal-header">
+    <h1 class="modal-title"><b>{{ticker}}</b> </h1>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <p>Current Price: {{ price }}</p>
+    <div>Quantity: 
+        <!-- <form [formGroup]="quantityForm"> -->
+        <input type="number" formControlName="quant">
+    <!-- </form> -->
+    </div>
+  </div>
+  <!-- <div class="modal-footer"> -->
+
+    <div style="text-align: left; border:1px solid grey; margin: 1rem; padding: 1rem;">
+        <span style="font-size: 1.2rem;">Total</span> <br> <br>
+    </div>
+
+    <!-- <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button> -->
+  <!-- </div> -->
